@@ -61,6 +61,7 @@ export default {
       console.log('Fetching messages...')
       const { data } = await axios.get('/api/messages')
       this.messages = data
+
       console.log('Initial messages loaded:', this.messages)
 
       console.log('Setting up Pusher connection...')
@@ -109,7 +110,10 @@ export default {
       try {
         console.log('Attempting to send message:', this.message)
         const { data } = await axios.post('/api/messages', { message: this.message })
+        
         console.log('Message sent successfully, response:', data)
+        
+        this.messages.push(this.message)
         this.message = ''
       } catch (error) {
         console.error('Error sending message:', error)

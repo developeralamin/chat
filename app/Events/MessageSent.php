@@ -20,17 +20,11 @@ class MessageSent implements ShouldBroadcast
 
     public function __construct(Message $message)
     {
-        Log::info('MessageSent event constructed', [
-            'message_id' => $message->id,
-            'user_id' => $message->user_id,
-            'message' => $message->message
-        ]);
         $this->message = $message;
     }
 
     public function broadcastOn()
     {
-        Log::info('Broadcasting on channel: chat');
         return new Channel('chat');
     }
 
