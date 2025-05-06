@@ -17,6 +17,6 @@ class UserController extends Controller
         ->orderByDesc(column: 'chats_max_created_at')
         ->get();
         
-        return response()->json(UserResource::collection($users));
+        return UserResource::collection($users);
     }
 } 

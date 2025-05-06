@@ -139,7 +139,7 @@ onMounted(async () => {
 const  fetchUsers = async() => {
     try {
     const response = await axios.get('/api/users')
-    users.value = response.data
+    users.value = response.data.data
   } catch (error) {
     console.error('Error loading users:', error)
   }

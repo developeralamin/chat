@@ -6,51 +6,41 @@ use App\Models\Chat;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Events\PrivateMessageSent;
-use Illuminate\Support\Facades\Log;
+use App\Http\Requests\ChatRequest;
+use App\Http\Resources\ChatResource;
+use App\Repository\ChatRepository;
 
 class ChatController extends Controller
 {
-    public function getMessages(Request $request, $userId)
-    {
-        $messages = Chat::where(function($query) use ($request, $userId) {
-            $query->where('sender_id', $request->user()->id)
-                  ->where('receiver_id', $userId);
-        })->orWhere(function($query) use ($request, $userId) {
-            $query->where('sender_id', $userId)
-                  ->where('receiver_id', $request->user()->id);
-        })
-        ->with(['sender', 'receiver'])
-        ->latest()
-        ->take(50)
-        ->get()
-        ->reverse()
-        ->values();
 
-        return response()->json($messages);
+    private ChatRepository $chat;
+
+    public function __construct(ChatRepository $chat)
+    {
+        $this->chat = $chat;
     }
 
-    public function sendMessage(Request $request)
+    public function getMessages(Request $request, $userId)
     {
-        $request->validate([
-            'receiver_id' => 'required|exists:users,id',
-            'message' => 'required|string'
-        ]);
+        $messages = $this->chat->index($request, $userId);
 
+        return response()->json(ChatResource::collection($messages));
+    }
+
+    public function sendMessage(ChatRequest $request)
+    {
         try {
-            $chat = Chat::create([
-                'sender_id' => $request->user()->id,
-                'receiver_id' => $request->receiver_id,
-                'message' => $request->message
-            ]);
+            $data = $request->only(['message','receiver_id']);
+            $chat = $this->chat->store($data);
 
             $chat->load(['sender', 'receiver']);
             
             broadcast(new PrivateMessageSent($chat))->toOthers();
             
-            return response()->json($chat);
+            return response()->json(new ChatResource($chat));
+            
         } catch (\Exception $e) {
-            Log::error('Error in chat message store:', ['error' => $e->getMessage()]);
-            return response()->json(['error' => 'Failed to send message'], 500);
+            return $this->fail('Failed to send message');
         }
     }
 } 

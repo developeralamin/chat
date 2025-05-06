@@ -25,8 +25,6 @@ class PrivateMessageSent implements ShouldBroadcast
 
     public function broadcastOn()
     {
-        Log::info($this->chat->receiver_id);
-        
         return new Channel('chat.' . $this->chat->receiver_id);
     }
 
