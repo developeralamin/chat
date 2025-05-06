@@ -72,30 +72,27 @@
   </div>
 </template>
 
-<script>
-import axios from 'axios';
+<script setup>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import axios from 'axios'
 
-export default {
-  data() {
-    return {
-      form: {
-        name: '',
-        email: '',
-        password: '',
-        password_confirmation: '',
-      },
-    };
-  },
-  methods: {
-    async register() {
-      try {
-        const response = await axios.post('/api/register', this.form);
-        localStorage.setItem('token', response.data.token);
-        this.$router.push('/alamin');
-      } catch (error) {
-        alert('Registration failed');
-      }
-    },
-  },
-};
+const router = useRouter()
+const form = ref({
+  name: '',
+  email: '',
+  password: '',
+  password_confirmation: ''
+})
+
+// register 
+const register = async () => {
+  try {
+    const response = await axios.post('/api/register', form.value)
+    localStorage.setItem('token', response.data.token)
+    router.push({name:'login'})
+  } catch (error) {
+    alert('Registration failed')
+  }
+}
 </script> 

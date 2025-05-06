@@ -5,10 +5,10 @@ import Register from '../components/Register.vue'
 
 const routes = [
     { path: '/', redirect: '/login' },
-    { path: '/login', component: Login },
+    { path: '/login',  name: "login", component: Login },
     { path: '/register', component: Register },
     { 
-        path: '/alamin', 
+        path: '/chat', 
         component: Chat,
         meta: { requiresAuth: true }
     }

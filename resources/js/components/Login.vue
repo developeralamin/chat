@@ -43,43 +43,53 @@
           </button>
         </div>
 
-        
+        <div>
+          <router-link to="/register">
+            <button class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+              Sign up
+            </button>
+          </router-link>
+        </div>
       </form>
     </div>
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import axios from 'axios'
+import { useAuthenticateStore } from '@/stores/authenticate'
 
-export default {
-  data() {
-    return {
-      email: '',
-      password: ''
+const router = useRouter()
+const authenticate = useAuthenticateStore()
+
+const email = ref('')
+const password = ref('')
+const loading = ref(false)
+
+//login
+const login = async () => {
+  loading.value = true
+  try {
+    const response = await axios.post('/api/login', {
+      email: email.value,
+      password: password.value
+    })
+
+    authenticate.login(response.data.token)
+    authenticate.setUser(response.data.user)
+    loading.value = false
+    router.push('/chat')
+  } catch (error) {
+    console.error('Login failed:', error)
+    if (error.response?.data?.status === 'fail') {
+      alert(error.response.data.message)
+      password.value = ''
+    } else {
+      alert('Login failed. Please check your credentials.')
     }
-  },
-  methods: {
-    async login() {
-      try {
-        const response = await axios.post('/api/login', {
-          email: this.email,
-          password: this.password
-        })
-
-        // Save token and set default headers
-        const token = response.data.token
-        localStorage.setItem('token', token)
-        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-        axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
-        axios.defaults.withCredentials = true
-
-        this.$router.push('/alamin')
-      } catch (error) {
-        console.error('Login failed:', error)
-        alert('Login failed. Please check your credentials.')
-      }
-    }
+    loading.value = false
   }
 }
 </script> 
