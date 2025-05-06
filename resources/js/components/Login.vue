@@ -77,8 +77,8 @@ const login = async () => {
       password: password.value
     })
 
-    authenticate.login(response.data.token)
-    authenticate.setUser(response.data.user)
+    authenticate.login(response.data.data.token)
+    authenticate.setUser(response.data.data.user)
     loading.value = false
     router.push('/chat')
   } catch (error) {
