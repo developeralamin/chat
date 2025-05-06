@@ -68,37 +68,25 @@ onMounted(async () => {
   }
 
   try {
-    const res = await axios.get('/api/me')
-    user.value = res.data
-    console.log('User data fetched:', user.value)
-
-    console.log('Fetching messages...')
     const { data } = await axios.get('/api/messages')
     messages.value = data
 
-    console.log('Initial messages loaded:', messages.value)
-
-    console.log('Setting up Pusher connection...')
-    console.log('Pusher config:', {
-      key: import.meta.env.VITE_PUSHER_APP_KEY,
-      cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER
-    })
 
     // Subscribe to the chat channel
     const channel = window.Echo.channel('chat')
     
     // Listen for new messages
     channel.listen('MessageSent', (e) => {
-      console.log('MessageSent event received:', e)
-      console.log('Current user ID:', user.value.id)
-      console.log('Message sender ID:', e.message.user.id)
+      // console.log('MessageSent event received:', e)
+      // console.log('Current user ID:', user.value.id)
+      // console.log('Message sender ID:', e.message.user.id)
       
       // Always add the message if it's not already in the array
       if (!messages.value.some(msg => msg.id === e.message.id)) {
         messages.value.push(e.message)
-        console.log('New message added:', e.message)
+        // console.log('New message added:', e.message)
       } else {
-        console.log('Message already exists, skipping...')
+        // console.log('Message already exists, skipping...')
       }
     })
 
