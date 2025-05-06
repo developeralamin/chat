@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Chat from '../components/Chat.vue'
 import Login from '../components/Login.vue'
+import PrivateChat from '../components/PrivateChat.vue'
 import Register from '../components/Register.vue'
 
 const routes = [
@@ -10,6 +11,11 @@ const routes = [
     { 
         path: '/chat', 
         component: Chat,
+        meta: { requiresAuth: true }
+    },
+    { 
+        path: '/private-chat', 
+        component: PrivateChat,
         meta: { requiresAuth: true }
     }
 ]

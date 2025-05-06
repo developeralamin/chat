@@ -27,12 +27,11 @@ class MessageController extends Controller
             // Load the user relationship before broadcasting
             $message->load('user');
             
-            Log::info('Broadcasting message', ['message_id' => $message->id]);
+            // Log::info('Broadcasting message', ['message_id' => $message->id]);
             
             // Broadcast to everyone except the sender
             broadcast(new MessageSent($message))->toOthers();
             
-            Log::info('Message broadcasted successfully');
             
             return $message;
         } catch (\Exception $e) {
