@@ -19,7 +19,7 @@ class UserResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
-            'last_message' => $lastMessage ? $lastMessage->message : null 
+            'last_message' => $lastMessage ? $lastMessage->message : null ,
         ];
     }
 }

@@ -20,7 +20,6 @@
           <div class="user-info">
             <div class="user-row">
               <span class="user-name">{{ user.name }}</span>
-              <span class="user-time">10:35 AM</span>
             </div>
             <div class="user-row">
               <span class="user-last">{{ user.last_message || '...' }}</span>
@@ -43,15 +42,12 @@
       </div>
       <div class="chat-body" ref="chatBodyRef">
         <div v-for="(message, index) in messages" :key="message.id">
-          <!-- <div v-if="shouldShowDateDivider(index)" class="date-divider">
-            <span>{{ formatDate(message.created_at) }}</span>
-          </div> -->
           <div :class="['chat-message', message.sender_id === currentUser.id ? 'sent' : 'received']">
             <img  class="avatar" :src="`https://ui-avatars.com/api/?name=${message.sender_id === currentUser.id ? currentUser.name : selectedUser.name}`" 
   alt="avatar">
             <div class="bubble">
               <p>{{ message.message }}</p>
-              <span class="time">{{ formatTime(message.created_at) }}</span>
+              <span class="time">{{ message.created_at }}</span>
             </div>
           </div>
         </div>
@@ -88,7 +84,6 @@ const messages = ref([])
 const selectedUser = ref(null)
 const newMessage = ref('')
 const searchQuery = ref('')
-const activeTab = ref('Open')
 const chatBodyRef = ref(null)
 
 // Filter users based on search query
@@ -98,28 +93,6 @@ const filteredUsers = computed(() => {
   )
 })
 
-// Format message time
-const formatTime = (date) => {
-  // return dayjs(date).format('h:mm a')
-}
-
-// Format message date
-const formatDate = (date) => {
-  // return dayjs(date).format('MMMM D, YYYY')
-}
-
-
-const conversationUser = ref(null);
-
-
-
-// Check if we should show date divider
-const shouldShowDateDivider = (index) => {
-  if (index === 0) return true
-  // const currentDate = dayjs(messages.value[index].created_at).format('YYYY-MM-DD')
-  // const previousDate = dayjs(messages.value[index - 1].created_at).format('YYYY-MM-DD')
-  // return currentDate !== previousDate
-}
 
 // Select user and load messages
 const selectUser = async (user) => {
@@ -127,7 +100,6 @@ const selectUser = async (user) => {
   try {
     const response = await axios.get(`/api/chats/${user.id}`)
     messages.value = response.data
-    // subscribeToPrivateChannel(user.id)
   } catch (error) {
     console.error('Error loading messages:', error)
   }
@@ -136,7 +108,6 @@ const selectUser = async (user) => {
 // Send message 
 const sendMessage = async () => {
   if (!newMessage.value.trim() || !selectedUser.value) return
-
   try {
     const response = await axios.post('/api/chats', {
       receiver_id: selectedUser.value.id,
@@ -149,11 +120,9 @@ const sendMessage = async () => {
   }
 }
 
-
+//here
 window.Echo.channel(`chat.${currentUser.value.id}`)
     .listen('PrivateMessageSent', (e) => {
-      console.log('Private message received:', e)
-
       if(selectedUser.value.id == e.chat.sender.id){
         messages.value.push(e.chat)
         scrollToBottom()
@@ -162,7 +131,7 @@ window.Echo.channel(`chat.${currentUser.value.id}`)
       }
 })
 
-// Load users on component mount
+// Load users
 onMounted(async () => {
     fetchUsers()
 })
