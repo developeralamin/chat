@@ -6,8 +6,30 @@
         <router-link to="/chat">Chat</router-link>
       </div>
     </nav>
+     <button 
+         @click="logout()"
+        class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+      >
+        Logout
+      </button>
     <div class="container mx-auto p-4">
       <router-view></router-view>
     </div>
   </div>
 </template> 
+
+<script setup>
+import { useAuthenticateStore } from '@/stores/authenticate'
+import { useRouter } from 'vue-router'
+
+
+const authenticate = useAuthenticateStore()
+
+
+const router = useRouter()
+//logout
+const logout = () => {
+  authenticate.logout()
+  router.push('/login')
+}
+</script>

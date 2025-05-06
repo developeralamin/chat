@@ -23,8 +23,7 @@
               <span class="user-time">10:35 AM</span>
             </div>
             <div class="user-row">
-              <span class="user-last">{{ user.lastMessage || '...' }}</span>
-              <span class="user-status" v-if="user.is_online"></span>
+              <span class="user-last">{{ user.last_message || '...' }}</span>
             </div>
           </div>
         </div>
@@ -35,7 +34,6 @@
         <img class="avatar" :src="`https://ui-avatars.com/api/?name=${selectedUser.name}`" alt="avatar">
         <div class="chat-user-info">
           <h4>{{ selectedUser.name }}</h4>
-          <span class="online-status" v-if="selectedUser.is_online"></span>
         </div>
         <div class="chat-header-actions">
           <i class="fa fa-search"></i>
@@ -110,6 +108,11 @@ const formatDate = (date) => {
   // return dayjs(date).format('MMMM D, YYYY')
 }
 
+
+const conversationUser = ref(null);
+
+
+
 // Check if we should show date divider
 const shouldShowDateDivider = (index) => {
   if (index === 0) return true
@@ -124,13 +127,13 @@ const selectUser = async (user) => {
   try {
     const response = await axios.get(`/api/chats/${user.id}`)
     messages.value = response.data
-    subscribeToPrivateChannel(user.id)
+    // subscribeToPrivateChannel(user.id)
   } catch (error) {
     console.error('Error loading messages:', error)
   }
 }
 
-// Send message
+// Send message 
 const sendMessage = async () => {
   if (!newMessage.value.trim() || !selectedUser.value) return
 
@@ -146,30 +149,33 @@ const sendMessage = async () => {
   }
 }
 
-// Subscribe to private channel
-const subscribeToPrivateChannel = (userId) => {
-  console.log('Subscribing to private channel for user:', userId)
-  window.Echo.channel(`chat.${userId}`)
-  console.log('Private message received:')
+
+window.Echo.channel(`chat.${currentUser.value.id}`)
     .listen('PrivateMessageSent', (e) => {
       console.log('Private message received:', e)
-      if (!messages.value.some(msg => msg.id === e.chat.id)) {
+
+      if(selectedUser.value.id == e.chat.sender.id){
         messages.value.push(e.chat)
         scrollToBottom()
+      }else{
+        fetchUsers()
       }
-    })
-}
+})
 
 // Load users on component mount
 onMounted(async () => {
-  try {
+    fetchUsers()
+})
+
+const  fetchUsers = async() => {
+    try {
     const response = await axios.get('/api/users')
     users.value = response.data
   } catch (error) {
     console.error('Error loading users:', error)
   }
   scrollToBottom()
-})
+}
 
 // Scroll to bottom function
 const scrollToBottom = () => {

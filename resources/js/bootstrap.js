@@ -14,18 +14,4 @@ window.Echo = new Echo({
     cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
     forceTLS: true,
     enabledTransports: ['ws', 'wss'],
-    authEndpoint: '/broadcasting/auth',
-    // auth: {
-    //     headers: {
-    //         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-    //     }
-    // }
-
 });
-
-// window.Echo.private(`chat.${id}`)
-//     .listen('PrivateMessageSent', (e) => {
-//         console.log('Private message received:', e)
-//     })
-
-
