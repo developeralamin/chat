@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Models\Chat;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Events\PrivateMessageSent;
 use App\Http\Requests\ChatRequest;
@@ -20,9 +18,9 @@ class ChatController extends Controller
         $this->chat = $chat;
     }
 
-    public function getMessages(Request $request, $userId)
+    public function getMessages($userId)
     {
-        $messages = $this->chat->index($request, $userId);
+        $messages = $this->chat->index( $userId);
 
         return response()->json(ChatResource::collection($messages));
     }

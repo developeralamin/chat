@@ -3,21 +3,22 @@
 namespace App\Repository;
 
 use App\Models\Chat;
-use Illuminate\Http\Request;
 
 class ChatRepository
 {
     /**
      * Get the userId based chats
      */
-    public function index(Request $request, $userId)
+    public function index($userId)
     {
-       return Chat::where(function($query) use ($request, $userId) {
-            $query->where('sender_id', $request->user()->id)
+        $authUserId = auth()->id();
+
+       return Chat::where(function($query) use ($authUserId, $userId) {
+            $query->where('sender_id', $authUserId)
                   ->where('receiver_id', $userId);
-        })->orWhere(function($query) use ($request, $userId) {
+        })->orWhere(function($query) use ($authUserId, $userId) {
             $query->where('sender_id', $userId)
-                  ->where('receiver_id', $request->user()->id);
+                  ->where('receiver_id', $authUserId);
         })
         ->with(['sender', 'receiver'])
         ->orderBy('created_at', 'asc') 
