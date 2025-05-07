@@ -71,3 +71,13 @@ Visit http://localhost:8000 in your browser.
  - Create a new account
  - Log in using your email and password
  - Start chatting in real time!
+
+
+
+
+
+![Screenshot_174](https://github.com/user-attachments/assets/e01e1338-e19f-43f3-8c83-da455d34f972)
+![Screenshot_176](https://github.com/user-attachments/assets/18b86128-0986-45f0-943a-24fca37d2130)
+![Screenshot_175](https://github.com/user-attachments/assets/74701019-664a-4c79-b951-0f962646fd1d)
+
+
