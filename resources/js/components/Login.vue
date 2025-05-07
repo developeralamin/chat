@@ -6,40 +6,44 @@
           Sign in to your account
         </h2>
       </div>
-      <form class="mt-8 space-y-6" @submit.prevent="login">
-        <div class="rounded-md shadow-sm -space-y-px">
+      <form class="mt-8 space-y-6" @submit.prevent="onFinish">
+        <div class="">
           <div>
             <label for="email" class="sr-only">Email address</label>
             <input
               id="email"
-              v-model="email"
+              v-model="login.email"
               name="email"
               type="email"
-              required
+              @keyup="login.errors.email = null"
               class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
               placeholder="Email address"
             />
           </div>
+           <p class="extra" v-if="login.errors.email"> {{ login.errors.email[0] }}</p>
+          <br/>
           <div>
             <label for="password" class="sr-only">Password</label>
             <input
               id="password"
-              v-model="password"
+              v-model="login.password"
               name="password"
               type="password"
-              required
+              @keyup="login.errors.password = null"
               class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
               placeholder="Password"
             />
           </div>
+           <p class="extra" v-if="login.errors.password"> {{ login.errors.password[0] }}</p>
         </div>
 
         <div>
           <button
             type="submit"
+            :disabled="loading"
             class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
-            Sign in
+            {{ loading ? 'Signing in...' : 'Sign in' }}
           </button>
         </div>
 
@@ -56,40 +60,47 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref ,reactive} from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
 import { useAuthenticateStore } from '@/stores/authenticate'
 
 const router = useRouter()
 const authenticate = useAuthenticateStore()
-
-const email = ref('')
-const password = ref('')
 const loading = ref(false)
 
-//login
-const login = async () => {
-  loading.value = true
-  try {
-    const response = await axios.post('/api/login', {
-      email: email.value,
-      password: password.value
-    })
+const login = reactive({
+  email: "",
+  password: "",
+  errors: {},
+});
 
-    authenticate.login(response.data.data.token)
-    authenticate.setUser(response.data.data.user)
-    loading.value = false
-    router.push('/chat')
-  } catch (error) {
-    console.error('Login failed:', error)
-    if (error.response?.data?.status === 'fail') {
-      alert(error.response.data.message)
-      password.value = ''
-    } else {
-      alert('Login failed. Please check your credentials.')
-    }
-    loading.value = false
-  }
+
+//login
+const onFinish = async () => {
+  loading.value = true
+    const response = await axios.post('/api/login',login)
+      .then((response)=>{
+          authenticate.login(response.data.data.token)
+          authenticate.setUser(response.data.data.user)
+          loading.value = false
+          router.push('/chat')
+    }).catch((error)=>{
+       if (error.response.data.status == "fail") {
+           alert(error.response.data.message)
+       }
+       if (error.response?.data?.errors) {
+        login.errors = error.response.data.errors;
+       }
+      login.password = "";
+      loading.value = false;
+    })
 }
+
 </script> 
+
+<style scoped>
+.extra{
+  color:red
+}
+</style>
