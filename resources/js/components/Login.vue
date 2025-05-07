@@ -50,7 +50,7 @@
         <div>
           <router-link to="/register">
             <button class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-              Sign up
+               Don't have an account ? Register
             </button>
           </router-link>
         </div>
@@ -77,9 +77,9 @@ const login = reactive({
 
 
 //login
-const onFinish = async () => {
+const onFinish = () => {
   loading.value = true
-    const response = await axios.post('/api/login',login)
+   axios.post('/api/login',login)
       .then((response)=>{
           authenticate.login(response.data.data.token)
           authenticate.setUser(response.data.data.user)
