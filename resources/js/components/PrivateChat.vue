@@ -1,6 +1,6 @@
 <template>
   <section class="chat-wrapper">
-    <div class="sidebar">
+    <div class="sidebar" :class="{ 'mobile-hide': selectedUser && isMobile }">
       <div class="sidebar-header">
         <div class="current-user">
           <img class="avatar"  :src="`https://ui-avatars.com/api/?name=${currentUser.name}`"  alt="avatar">
@@ -43,6 +43,9 @@
           <i class="fa fa-heart-o"></i>
           <i class="fa fa-user-o"></i>
         </div>
+        <button v-if="isMobile" class="back-btn" @click="selectedUser = null">
+          <i class="fa fa-arrow-left"></i> User List
+        </button>
       </div>
       <div class="chat-body" ref="chatBodyRef">
         <div v-for="(message, index) in messages" :key="message.id">
@@ -91,6 +94,7 @@ const selectedUser = ref(null)
 const newMessage = ref('')
 const searchQuery = ref('')
 const chatBodyRef = ref(null)
+const isMobile = ref(window.innerWidth <= 768)
 
 // Filter users based on search query
 const filteredUsers = computed(() => {
@@ -169,6 +173,10 @@ const scrollToBottom = () => {
 
 watch(messages, () => {
   scrollToBottom()
+})
+
+window.addEventListener('resize', () => {
+  isMobile.value = window.innerWidth <= 768
 })
 </script>
 
@@ -496,6 +504,72 @@ watch(messages, () => {
   background: #2451b7;
 }
 @media (max-width: 768px) {
+  .chat-wrapper {
+    flex-direction: column;
+  }
+  .sidebar {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .sidebar.mobile-hide {
+    display: none !important;
+  }
+  .chat-area {
+    border-radius: 0;
+    box-shadow: none;
+    min-width: 0;
+    width: 100%;
+  }
+  .chat-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 8px 10px 8px;
+    position: relative;
+    min-height: 56px;
+  }
+  .chat-header .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin: 0 8px 0 0;
+  }
+  .chat-user-info h4 {
+    font-size: 16px;
+    margin: 0;
+    font-weight: 500;
+    color: #222;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .chat-user-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+  }
+  .chat-header-actions {
+    gap: 8px;
+    font-size: 18px;
+  }
+  .back-btn {
+    display: flex;
+    align-items: center;
+    background: none;
+    border: none;
+    color: #3366e7;
+    font-size: 16px;
+    margin: 0 4px 0 0;
+    cursor: pointer;
+    position: static;
+    z-index: 20;
+    padding: 0;
+    height: 40px;
+  }
   .chat-input-fixed-container {
     left: 0 !important;
     right: 0 !important;
