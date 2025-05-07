@@ -57,7 +57,7 @@ php artisan key:generate
 - Step:7 Run the application In a separate terminal:
 ```bash
 php artisan serve 
-    and 
+ 
 npm run dev
 ```
 Step 8: Start the queue listener (for broadcasting)
