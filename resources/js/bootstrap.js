@@ -4,7 +4,7 @@ import Pusher from 'pusher-js';
 
 window.axios = axios;
 window.axios.defaults.withCredentials = true;
-window.axios.defaults.baseURL = 'http://127.0.0.1:8000';
+window.axios.defaults.baseURL = import.meta.env.APP_URL
 
 window.Pusher = Pusher;
 

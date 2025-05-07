@@ -68,6 +68,6 @@ php artisan queue:work
 Access the Application
 
 Visit http://localhost:8000 in your browser.
-Create a new account
-Log in using your email and password
-Start chatting in real time!
+ - Create a new account
+ - Log in using your email and password
+ - Start chatting in real time!
