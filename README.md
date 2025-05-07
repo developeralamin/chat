@@ -60,7 +60,7 @@ php artisan serve
  
 npm run dev
 ```
-Step 8: Start the queue listener and default queue connection is database (for broadcasting)
+Step 8: Start the queue  and default queue connection is database (for broadcasting)
 ```bash
 php artisan queue:work
 ```
