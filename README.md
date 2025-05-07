@@ -64,6 +64,11 @@ Step 8: Start the queue  and default queue connection is database (for broadcast
 ```bash
 php artisan queue:work
 ```
+
+Step 8: Default queue connection is database (for broadcasting)
+```bash
+  QUEUE_CONNECTION=database
+```
 -
 Access the Application
 
