@@ -6,7 +6,6 @@
           <img class="avatar"  :src="`https://ui-avatars.com/api/?name=${currentUser.name}`"  alt="avatar">
           <div>
             <h4>{{ currentUser.name }}</h4>
-            <span class="role">{{ currentUser.role || 'User' }}</span>
           </div>
         </div>
         <span class="edit-icon"><i class="fa fa-pencil"></i></span>
@@ -14,7 +13,7 @@
       <div class="sidebar-search">
         <input type="text" v-model="searchQuery" placeholder="Search Here..." />
       </div>
-      <div class="user-list">
+      <div class="user-list" v-if="filteredUsers.length > 0">
         <div v-for="user in filteredUsers" :key="user.id" :class="['user-item', { active: selectedUser && selectedUser.id === user.id }]" @click="selectUser(user)">
           <img class="avatar" :src="`https://ui-avatars.com/api/?name=${user.name}`" alt="avatar">
           <div class="user-info">
@@ -25,6 +24,11 @@
               <span class="user-last">{{ user.last_message || '...' }}</span>
             </div>
           </div>
+        </div>
+      </div>
+      <div class="user-list" v-else>
+        <div class="user-item">
+          <span class="user-name">No users found</span>
         </div>
       </div>
     </div>
@@ -43,11 +47,11 @@
       <div class="chat-body" ref="chatBodyRef">
         <div v-for="(message, index) in messages" :key="message.id">
           <div :class="['chat-message', message.sender_id === currentUser.id ? 'sent' : 'received']">
-            <img  class="avatar" :src="`https://ui-avatars.com/api/?name=${message.sender_id === currentUser.id ? currentUser.name : selectedUser.name}`" 
-  alt="avatar">
+            <img class="avatar" :src="`https://ui-avatars.com/api/?name=${message.sender_id === currentUser.id ? currentUser.name : selectedUser.name}`" alt="avatar">
             <div class="bubble">
+             
               <p>{{ message.message }}</p>
-              <span class="time">{{ message.created_at }}</span>
+              <span class="time">{{ dayjs(message.created_at).format('MMM D, YYYY h:mm A') }}</span>
             </div>
           </div>
         </div>
@@ -75,7 +79,7 @@
 import { ref, onMounted, computed, watch, nextTick } from 'vue'
 import { useAuthenticateStore } from '@/stores/authenticate'
 import axios from 'axios'
-// import dayjs from 'dayjs'
+import dayjs from 'dayjs'
 
 const authenticate = useAuthenticateStore()
 const currentUser = ref(authenticate.user)
@@ -386,6 +390,21 @@ watch(messages, () => {
   border-bottom-left-radius: 6px;
   border-bottom-right-radius: 18px;
 }
+.message-header {
+  margin-bottom: 4px;
+  font-size: 12px;
+  color: #666;
+}
+
+.sender-name {
+  font-weight: 600;
+  margin-right: 8px;
+}
+
+.receiver-name {
+  color: #888;
+}
+
 .bubble .time {
   display: block;
   font-size: 11px;
