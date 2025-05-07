@@ -69,6 +69,13 @@ Step 9: Default queue connection is database (for broadcasting)
 ```bash
   QUEUE_CONNECTION=database
 ```
+
+📦 Requirements
+    "php": "^8.2",
+    composer
+    Node.js & npm
+
+
 -
 Access the Application
 
