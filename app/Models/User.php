@@ -50,4 +50,6 @@ class User extends Authenticatable
     public function chats(){
         return $this->hasMany(Chat::class,'sender_id');
     }
+
+    
 }

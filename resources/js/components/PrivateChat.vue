@@ -127,7 +127,8 @@ const sendMessage = async () => {
 //here
 window.Echo.channel(`chat.${currentUser.value.id}`)
     .listen('PrivateMessageSent', (e) => {
-      if(selectedUser.value.id == e.chat.sender.id){
+      if(selectedUser.value && selectedUser.value.id == e.chat.sender.id){
+        e.chat.isNew = true;
         messages.value.push(e.chat)
         scrollToBottom()
       }else{
@@ -143,7 +144,12 @@ onMounted(async () => {
 const  fetchUsers = async() => {
     try {
     const response = await axios.get('/api/users')
-    users.value = response.data.data
+    users.value = response.data.data.sort((a, b) => {
+      // Sort users based on last message time
+      const timeA = a.last_message_time || 0;
+      const timeB = b.last_message_time || 0;
+      return timeB - timeA;
+    });
   } catch (error) {
     console.error('Error loading users:', error)
   }
@@ -377,6 +383,10 @@ watch(messages, () => {
   background: #f1f1f1;
   color: #222;
   box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+}
+.bubble.new-message {
+  color: #000;
+  font-weight: 500;
 }
 .chat-message.sent .bubble {
   background: #e6f0ff;
