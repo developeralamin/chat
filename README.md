@@ -71,10 +71,12 @@ Step 9: Default queue connection is database (for broadcasting)
 ```
 
 📦 Requirements
-    -"php": "^8.2",
-    - composer
-    - Node.js & npm
-
+```bash
+    "php": "^8.2",
+    laravel - v12.0
+    composer - 2.5.8
+    Node.js - v20.10.0
+```
 
 -
 Access the Application
