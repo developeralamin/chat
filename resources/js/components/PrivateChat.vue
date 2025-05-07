@@ -56,17 +56,19 @@
           </div>
         </div>
       </div>
-      <div class="chat-input-area">
-        <div class="input-wrapper">
-          <i class="fa fa-microphone"></i>
-          <input type="text" v-model="newMessage" placeholder="Write Something..." @keyup.enter="sendMessage" />
-          <i class="fa fa-paperclip"></i>
-          <i class="fa fa-smile-o"></i>
+      <div class="chat-input-fixed-container">
+        <div class="chat-input-area">
+          <div class="input-wrapper">
+            <i class="fa fa-microphone"></i>
+            <input type="text" v-model="newMessage" placeholder="Write Something..." @keyup.enter="sendMessage" />
+            <i class="fa fa-paperclip"></i>
+            <i class="fa fa-smile-o"></i>
+          </div>
+          <button class="send-btn-rect" @click="sendMessage">
+            <i class="fa fa-paper-plane"></i>
+            <span>Send</span>
+          </button>
         </div>
-        <button class="send-btn-rect" @click="sendMessage">
-          <i class="fa fa-paper-plane"></i>
-          <span>Send</span>
-        </button>
       </div>
     </div>
     <div class="chat-area empty" v-else>
@@ -284,6 +286,7 @@ watch(messages, () => {
   border-bottom-right-radius: 20px;
   box-shadow: 0 0 10px rgba(0,0,0,0.04);
   position: relative;
+  overflow: hidden;
 }
 .chat-area.empty {
   align-items: center;
@@ -336,6 +339,9 @@ watch(messages, () => {
   background: #f7f8fa;
   display: flex;
   flex-direction: column;
+  position: relative;
+  padding-bottom: 100px;
+  margin-top: -100px;
 }
 .date-divider {
   text-align: center;
@@ -391,8 +397,6 @@ watch(messages, () => {
 .chat-message.sent .bubble {
   background: #e6f0ff;
   color: #222;
-  border-bottom-right-radius: 6px;
-  border-bottom-left-radius: 18px;
 }
 .chat-message.received .bubble {
   background: #fff;
@@ -422,12 +426,29 @@ watch(messages, () => {
   margin-top: 6px;
   text-align: right;
 }
+.chat-input-fixed-container {
+  position: fixed;
+    bottom: 0px;
+    right: 22%;
+    left: 73px;
+    z-index: 10;
+    background: transparent;
+    width: 112%;
+    display: flex
+;
+    justify-content: center;
+    pointer-events: none;
+}
+
 .chat-input-area {
   display: flex;
   align-items: center;
   padding: 18px 32px;
   background: #e6f0ff;
-  border-bottom-right-radius: 20px;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+  width: 68%;
+  margin: 0;
+  pointer-events: auto;
 }
 .input-wrapper {
   flex: 1;
@@ -473,5 +494,22 @@ watch(messages, () => {
 }
 .send-btn-rect:hover, .send-btn-rect:focus {
   background: #2451b7;
+}
+@media (max-width: 768px) {
+  .chat-input-fixed-container {
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    padding: 0;
+  }
+  .chat-input-area {
+    width: 100% !important;
+    padding: 10px 8px !important;
+    border-radius: 0 0 0 0 !important;
+  }
+  .chat-body {
+    padding: 16px 4px 80px 4px !important;
+    margin-top: 0 !important;
+  }
 }
 </style> 
