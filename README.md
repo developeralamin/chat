@@ -80,7 +80,7 @@ Step 9: Default queue connection is database (for broadcasting)
 -
 Access the Application
 
-Visit http://localhost:8000 in your browser.
+Visit http://127.0.0.1:8000 in your browser.
  - Create a new account
  - Log in using your email and password
  - Start chatting in real time!
