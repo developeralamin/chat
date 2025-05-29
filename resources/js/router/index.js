@@ -4,7 +4,11 @@ import PrivateChat from '../components/PrivateChat.vue'
 import Register from '../components/Register.vue'
 
 const routes = [
-    { path: '/', redirect: '/login' },
+    {
+         path: '/', 
+         meta: {requiredAuth: true }, 
+         redirect: '/chat' 
+        },
     { path: '/login',  name: "login", component: Login },
     { path: '/register', component: Register },
     { 
