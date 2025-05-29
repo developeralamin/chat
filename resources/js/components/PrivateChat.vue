@@ -65,7 +65,16 @@
             <i class="fa fa-image"></i>
             <i class="fa fa-sticky-note"></i>
             <span>GIF</span>
-            <input type="text" v-model="newMessage" placeholder="Write Something..." @keyup.enter="sendMessage" />
+            <textarea
+              ref="chatInputRef"
+              v-model="newMessage"
+              placeholder="Write Something..."
+              @input="autoResize"
+              @keyup.enter.exact.prevent="sendMessage"
+              rows="1"
+              class="chat-textarea"
+            ></textarea>
+            <!-- <input type="text" v-model="newMessage" placeholder="Write Something..." @keyup.enter="sendMessage" /> -->
             <i class="fa fa-smile-o"></i>
             <span class="green-dot"></span>
             <i class="fa fa-thumbs-up"></i>
@@ -115,6 +124,17 @@ const selectUser = async (user) => {
     messages.value = response.data
   } catch (error) {
     console.error('Error loading messages:', error)
+  }
+}
+
+// auto ressize text area
+const chatInputRef = ref(null)
+
+const autoResize = () => {
+  const el = chatInputRef.value
+  if (el) {
+    el.style.height = 'auto'
+    el.style.height = el.scrollHeight + 'px'
   }
 }
 
