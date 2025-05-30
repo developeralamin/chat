@@ -147,7 +147,8 @@ const sendMessage = async () => {
       message: newMessage.value
     })
     messages.value.push(response.data)
-    newMessage.value = ''
+    newMessage.value = '',
+     await fetchUsers()
   } catch (error) {
     console.error('Error sending message:', error)
   }
@@ -160,9 +161,8 @@ window.Echo.channel(`chat.${currentUser.value.id}`)
         e.chat.isNew = true;
         messages.value.push(e.chat)
         scrollToBottom()
-      }else{
-        fetchUsers()
       }
+        fetchUsers()
 })
 
 // Load users
